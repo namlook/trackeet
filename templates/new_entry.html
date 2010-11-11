@@ -4,21 +4,17 @@
 
 <h1> Create new entry </h1>
 
+<section id="new_entry_form">
 <form action="{{url_for('create_entry')}}" method="post">
 
-<dl>
-    <dt><label for="duration">Duration:</label></dt>
-    <dd><input type="text" id="duration" name="duration"></dd>
+  <input type="text" id="duration" name="duration" value="Duration">
+  <input type="text" id="project" name="project" value="Project">
+  <input type="text" id="task" name="task" value="Task">
 
-    <dt><label for="project">Project:</label></dt>
-    <dd><input type="text" id="project" name="project"></dd>
-
-    <dt><label for="task">Task:</label></dt>
-    <dd><input type="text" id="task" name="task"></dd>
-</dl>
 <input type="submit" />
 
 </form>
+</section>
 
 {% endblock %}
 
