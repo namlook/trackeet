@@ -7,7 +7,8 @@
 <section id="new_entry_form">
 <form action="{{url_for('create_entry')}}" method="post">
 
-  <input type="text" id="duration" name="duration" value="duration">
+  <input type="hidden" id="duration" name="duration" value="duration">
+  <input type="text" id="formatted_duration" name="duration" value="duration">
   <input type="text" id="project" name="project" value="project">
   <input type="text" id="stub" name="stub" value="tags or descriptions">
 
