@@ -15,30 +15,29 @@ class Project(Root):
         '_id': unicode # name
     }
 
-class Task(Root):
+class Tag(Root):
     """
-    A Task is something we're working on and we'd like to track the time we
+    A Tag is something we're working on and we'd like to track the time we
     spent on it.
 
-    A task is assigned to a project.
     """
-    __collection__ = 'tasks'
+    __collection__ = 'tags'
     structure = {
-        'project': unicode,
-        'name': unicode,
+        '_id': unicode,
     }
-    required_fields = ['project', 'name']
 
 class Entry(Root):
     """
-    An Entry is a piece of time spent on a Task.
+    An Entry is a piece of time spent on a project. It could have tags or
+    comments.
     """
     __collection__ = 'entries'
     structure = {
-        'task': ObjectId,
+        'project': unicode,
         'duration': int, #minutes
         'created_at': datetime,
         'comment': unicode,
+        'tags': [unicode],
     }
-    required_fields = ['task', 'duration', 'created_at']
+    required_fields = ['project', 'duration', 'created_at']
 

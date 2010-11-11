@@ -3,11 +3,12 @@ from flask import (Flask,
     render_template,
     request,
     g,
+    abort,
     redirect,
     url_for,
     flash)
 from models import *
-from mongokit import Connection
+from mongokit import Connection, ObjectId
 from datetime import datetime
 
 from flask import Flask
@@ -20,7 +21,7 @@ app.config['SECRET_KEY'] = 'secret'
 
 # register models
 con = Connection()
-con.register([Project, Task, Entry])
+con.register([Project, Tag, Entry])
 
 def get_db():
     return con[app.config['DATABASE']]
@@ -44,25 +45,49 @@ def create_entry():
     new one on the fly.
     """
     project_id =  request.form['project']
-    task_name = request.form['task']
+    tag_id = request.form['tag']
     duration = int(request.form['duration'])
     if not g.db.Project.find_one(project_id):
         project = g.db.Project()
         project['_id'] = project_id
         project.save()
-    task = g.db.Project.find_one({'name':task_name, 'project':project_id})
-    if not task:
-        task = g.db.Task()
-        task['name'] = task_name
-        task['project'] = project_id
-        task.save()
+    if not g.db.Tag.find_one(tag_id):
+        tag = g.db.Tag()
+        tag['_id'] = tag_id
+        tag.save()
     entry = g.db.Entry()
+    entry['project'] = project_id
     entry['duration'] = duration
-    entry['task'] = task['_id']
+    entry['tags'] = [tag_id]
     #entry['comment'] = comment
     entry['created_at'] = datetime.utcnow()
     entry.save()
     flash('entry created', 'success') 
     return redirect(url_for('new_entry'))
     
+@app.route('/entry/edit/<id>', methods=['POST'])
+def edit_entry(id):
+    entry = g.db.Entry.find_one(ObjectId(id))
+    if not entry:
+        flash('entry not found', 'error')
+        return redirect(url_for('new_entry'))
+    return render_template('edit_entry.html', entry=entry)
+
+@app.route('/entry/update/<id>', methods=['POST'])
+def update_entry(id):
+    entry = g.db.Entry.find_one(ObjectId(id))
+    if not entry:
+        flash('entry not found', 'error')
+    else:
+        if request.form.get('duration'):
+            entry['duration'] = int(request.form['duration'])
+        if request.form.get('tags'):
+            entry['tags'] = request.form['tags']
+        if request.form.get('project'):
+            if not g.db.Project.find_one(request.form['project']):
+                abort(404)
+            entry['project'] = request.form['project']
+        entry.save()
+        flash('entry updated', 'success')
+    return redirect(url_for('new_entry'))
 
