@@ -1,6 +1,6 @@
 
 from flask import (Module, render_template, request, Response, g,
-  abort, redirect, url_for, flash)
+  abort, redirect, url_for, flash, Response)
 from mongokit import ObjectId
 from datetime import datetime
 import re
@@ -105,7 +105,7 @@ def list_entries(project=None):
 def ajax_list_projects():
     term = request.args['term']
     projects = g.db.Project.find({'_id' : re.compile(term, re.IGNORECASE)});
-    return entry.response_class(
+    return Response(
       json.dumps([i['_id'] for i in projects]),
       mimetype='application/json'
     )
