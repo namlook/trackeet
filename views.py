@@ -133,10 +133,13 @@ def list_entries(project=None):
 def ajax_list_projects():
     term = request.args['term']
     projects = g.db.Project.find({'_id' : re.compile(term, re.IGNORECASE)});
-    projects = [i.to_json_type() for i in projects]
-    return app.response_class(json.dumps(projects), mimetype='application/json')
+    return app.response_class(
+      json.dumps([i['_id'] for i in projects]),
+      mimetype='application/json'
+    )
 
 @app.route('/tag/<id>')
 def list_entry_by_tag(id):
     entries = g.db.Entry.find({'tags':id})
-    return render_template('list_entry_by_tag.html', entries=entries, current_tag=id)
+    return render_template('list_entry_by_tag.html',
+      entries=entries, current_tag=id)
