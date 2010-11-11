@@ -11,13 +11,6 @@ import json
 entry = Module(__name__)
 
 
-@entry.route('/entry/new')
-def new_entry():
-    """
-    display the form page in order to create a new entry
-    """
-    return render_template('new_entry.html')
-
 @entry.route('/entry/create', methods=['post'])
 def create_entry():
     """
