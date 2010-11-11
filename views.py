@@ -2,16 +2,20 @@
 from flask import (Flask,
     render_template,
     request,
+    Response,
     g,
     abort,
     redirect,
     url_for,
-    flash)
+    flash,
+    jsonify)
 from models import *
 from mongokit import Connection, ObjectId
 from datetime import datetime
+import re
 
 from flask import Flask
+import json
 
 # create our application
 app = Flask(__name__)
@@ -108,3 +112,9 @@ def list_entries(project=None):
     entries = g.db.Entry.find(query)
     return render_template('list_entries.html', entries=entries)
 
+@app.route('/ajax/project/list', methods=['GET'])
+def ajax_list_projects():
+    term = request.args['term']
+    projects = g.db.Project.find({'_id' : re.compile(term, re.IGNORECASE)});
+    projects = [i.to_json_type() for i in projects]
+    return app.response_class(json.dumps(projects), mimetype='application/json')

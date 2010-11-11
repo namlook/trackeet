@@ -105,3 +105,12 @@ class MyTest(TestCase):
         assert 'tests' in response.data
         assert 'abcde_project' not in response.data, response.data
 
+    def test_ajax_project_list(self):
+        self.assert200(self.create_entry(project='trackeet_project', duration=10, tag='documentation'))
+        response = self.client.get('/ajax/project/list?term=trackeet')
+        self.assert200(response)
+        assert 'project' in response.data
+        response = self.client.get('/ajax/project/list?term=project')
+        self.assert200(response)
+        assert 'trackeet' in response.data
+
