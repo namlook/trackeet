@@ -1,5 +1,5 @@
 
-from views import app, con
+from trackeet import app, con
 from flask import Flask
 from flaskext.testing import TestCase
 
