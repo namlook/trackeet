@@ -13,6 +13,7 @@ from models import *
 from mongokit import Connection, ObjectId
 from datetime import datetime
 import re
+from helpers import process_stub
 
 from flask import Flask
 import json
@@ -26,6 +27,10 @@ app.config['SECRET_KEY'] = 'secret'
 # register models
 con = Connection()
 con.register([Project, Tag, Entry])
+
+@app.template_filter('forge_stub')
+def forge_stub(entry):
+    return ", ".join(i for i in entry['tags']+entry['comments'] if i is not None)
 
 def get_db():
     return con[app.config['DATABASE']]
@@ -51,27 +56,32 @@ def create_entry():
     project_id =  request.form.get('project')
     if not project_id or not request.form.get('duration'):
         abort(400)
-    tag_id = request.form.get('tag')
     duration = int(request.form['duration'])
+    stub = request.form.get('stub', '')
+    if stub:
+        stub = process_stub(stub)
+    else:
+        stub = {'tags':[], 'comments':[]}
     if not g.db.Project.find_one(project_id):
         project = g.db.Project()
         project['_id'] = project_id
         project.save()
-    if not g.db.Tag.find_one(tag_id):
-        tag = g.db.Tag()
-        tag['_id'] = tag_id
-        tag.save()
+    for tag_id in stub['tags']:
+        if not g.db.Tag.find_one(tag_id):
+            tag = g.db.Tag()
+            tag['_id'] = tag_id
+            tag.save()
     entry = g.db.Entry()
     entry['project'] = project_id
     entry['duration'] = duration
-    entry['tags'] = [tag_id]
-    #entry['comment'] = comment
+    entry['tags'] = stub['tags']
+    entry['comments'] = stub['comments']
     entry['created_at'] = datetime.utcnow()
     entry.save()
     flash('entry created', 'success') 
     return redirect(url_for('new_entry'))
     
-@app.route('/entry/edit/<id>', methods=['POST'])
+@app.route('/entry/edit/<id>')
 def edit_entry(id):
     entry = g.db.Entry.find_one(ObjectId(id))
     if not entry:
@@ -87,18 +97,25 @@ def update_entry(id):
     else:
         if request.form.get('duration'):
             entry['duration'] = int(request.form['duration'])
-        if request.form.get('tags'):
-            if not g.db.Tag.find_one(request.form.get('tags')):
+        stub = request.form.get('stub', '')
+        if stub:
+            stub = process_stub(stub)
+        else:
+            stub = {'tags':[], 'comments':[]}
+        for tag_id in stub['tags']:
+            if not g.db.Tag.find_one(tag_id):
                 tag = g.db.Tag()
-                tag['_id'] = request.form.get('tags')
+                tag['_id'] = tag_id
                 tag.save()
-            entry['tags'] = [tag['_id']]
-        if request.form.get('project'):
-            if not g.db.Project.find_one(request.form['project']):
+        entry['tags'] = stub['tags']
+        entry['comments'] = stub['comments']
+        project_id = request.form.get('project')
+        if project_id:
+            if not g.db.Project.find_one(project_id):
                 project = g.db.Project()
-                project['_id'] = request.form['project']
+                project['_id'] = project_id
                 project.save()
-            entry['project'] = project['_id']
+            entry['project'] = project_id
         entry.save()
         flash('entry updated', 'success')
     return redirect(url_for('new_entry'))
