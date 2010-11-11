@@ -38,14 +38,16 @@ def new_entry():
     """
     return render_template('new_entry.html')
 
-@app.route('/entry/create', methods=['POST'])
+@app.route('/entry/create', methods=['post'])
 def create_entry():
     """
     save a entry in the database. If the task does not exists, it will create a
     new one on the fly.
     """
-    project_id =  request.form['project']
-    tag_id = request.form['tag']
+    project_id =  request.form.get('project')
+    if not project_id or not request.form.get('duration'):
+        abort(400)
+    tag_id = request.form.get('tag')
     duration = int(request.form['duration'])
     if not g.db.Project.find_one(project_id):
         project = g.db.Project()
@@ -96,4 +98,13 @@ def update_entry(id):
         entry.save()
         flash('entry updated', 'success')
     return redirect(url_for('new_entry'))
+
+@app.route('/entry/list/<project>')
+@app.route('/entry/list')
+def list_entries(project=None):
+    query = {}
+    if project:
+        query['project'] = project
+    entries = g.db.Entry.find(query)
+    return render_template('list_entries.html', entries=entries)
 

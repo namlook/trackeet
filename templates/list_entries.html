@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<table>
+    <tr>
+        <th>duration</th>
+        <th>project</th>
+        <th>tags/comments</th>
+    </tr>
+{% for entry in entries %}
+    <tr>
+        <td>{{entry['duration']}}</td>
+        <td><a href="{{url_for('list_entries', project=entry['project'])}}">{{entry['project']}}</a></td>
+        <td>{{entry['tags']}}</td>
+    </tr>
+{% endfor %}
+</table>
+
+{% endblock %}
+
+
