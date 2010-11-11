@@ -26,7 +26,7 @@
 
 
   <!-- CSS : implied media="all" -->
-  <link rel="stylesheet" href="/static/css/style.css?v=2">
+  <link rel="stylesheet" href="/static/css/style.css?v=8">
   <link rel="stylesheet" href="/static/css/jquery-ui/ui-lightness/jquery-ui-1.8.6.custom.css?v=2">
 
   <!-- Uncomment if you are specifically targeting less enabled mobile browsers
@@ -52,7 +52,8 @@
       {% endwith %}
     </header>
 
-    <div id="main">
+    <div id="main" class="document">
+      <h1><a href="{{url_for('new_entry')}}">Trackeet</a></h1>
       {% block body %}{% endblock %}
     </div>
 

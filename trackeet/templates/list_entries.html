@@ -2,6 +2,26 @@
 
 {% block body %}
 
+<h2> Create new entry </h2>
+
+<section id="new_entry_form">
+<fieldset><label>Create a new entry</label>
+<form action="{{url_for('create_entry')}}" method="post">
+
+  <input type="text" id="duration" name="duration" value="duration">
+  <input type="text" id="project" name="project" value="project">
+  <input type="text" id="stub" name="stub" value="tags or descriptions">
+
+  <input type="submit" />
+
+</form>
+</fieldset>
+</section>
+
+
+<h2> {{total_time}} minutes in total </h2>
+
+<fieldset>
 <table>
     <tr>
         <th>duration</th>
@@ -16,14 +36,15 @@
         <td><a href="{{url_for('list_entries', project=entry['project'])}}">{{entry['project']}}</a></td>
         <td>
         {% for tag in entry['tags'] %}
-            <a href="{{url_for('list_entry_by_tag', id=tag)}}">{{tag}}</a>
+            <a href="{{url_for('list_entries', tag=tag)}}">{{tag}}</a>
         {% endfor %}
         </td>
         <td>{{entry['comments'] | join(', ')}}</td>
-        <td><a href="{{url_for('edit_entry', id=entry['_id'])}}">edit</a></td>
+        <td><small><a href="{{url_for('edit_entry', id=entry['_id'])}}">edit</a></small></td>
     </tr>
 {% endfor %}
 </table>
+</fieldset>
 
 {% endblock %}
 
