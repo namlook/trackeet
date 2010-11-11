@@ -223,20 +223,17 @@ button {  width: auto; overflow: visible; }
  /* Primary Styles
     Author: 
  */
+body {
+  padding: 20px;
+}
+#container {
+  width: 995px;
+  margin: auto;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*
+ * End of user defined styles
+ * /
 
 /*
  * Media queries for responsive design
