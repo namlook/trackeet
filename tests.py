@@ -74,6 +74,17 @@ class MyTest(TestCase):
         self.assertEqual(new_entry['duration'], 15)
         self.assertNotEqual(new_entry['duration'], entry['duration'])
 
+    def test_update_entry2(self):
+        self.assert200(self.create_entry(duration=15,
+          project='trackeet',
+          stub='test, documentation, this is a test'
+        ))
+        entry = self.db.Entry.find_one()
+        self.assert200(self.update_entry(entry, stub='test, this is a test'))
+        new_entry = self.db.Entry.find_one(entry['_id'])
+        self.assertEqual(new_entry['tags'], ['test'])
+        self.assertEqual(new_entry['comments'], ['this is a test'])
+
     def test_update_entry_new_project(self):
         assert self.db.Project.find_one('test') is None
         self.create_entry(fill=True)

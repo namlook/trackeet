@@ -5,14 +5,14 @@
 <h1> Edit entry </h1>
 
 
-<form action="{{url_for('update_entry')}}" method="post">
+<form action="{{url_for('update_entry', id=entry['_id'])}}" method="post">
     <input type="hidden" name="_id" value="{{entry['_id']}}" />
     <dl>
         <dt><label for="duration">Duration:</label></dt>
         <dd><input type="text" id="duration" name="duration" value="{{entry['duration']}}"></dd>
 
         <dt><label for="project">Project:</label></dt>
-        <dd><input type="text" id="project" name="project" value="{{entry['project']]}}"></dd>
+        <dd><input type="text" id="project" name="project" value="{{entry['project']}}"></dd>
 
         <dt><label for="tag">Tags or description:</label></dt>
         <dd><input type="text" id="stub" name="stub" value="{{entry|forge_stub}}"></dd>

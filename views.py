@@ -26,7 +26,7 @@ con.register([Project, Tag, Entry])
 
 @app.template_filter('forge_stub')
 def forge_stub(entry):
-    return ", ".join(entry['tags']+entry['comments'])
+    return ", ".join(i for i in entry['tags']+entry['comments'] if i is not None)
 
 def get_db():
     return con[app.config['DATABASE']]
@@ -77,7 +77,7 @@ def create_entry():
     flash('entry created', 'success') 
     return redirect(url_for('new_entry'))
     
-@app.route('/entry/edit/<id>', methods=['POST'])
+@app.route('/entry/edit/<id>')
 def edit_entry(id):
     entry = g.db.Entry.find_one(ObjectId(id))
     if not entry:
@@ -105,12 +105,13 @@ def update_entry(id):
                 tag.save()
         entry['tags'] = stub['tags']
         entry['comments'] = stub['comments']
-        if request.form.get('project'):
-            if not g.db.Project.find_one(request.form['project']):
+        project_id = request.form.get('project')
+        if project_id:
+            if not g.db.Project.find_one(project_id):
                 project = g.db.Project()
-                project['_id'] = request.form['project']
+                project['_id'] = project_id
                 project.save()
-            entry['project'] = project['_id']
+            entry['project'] = project_id
         entry.save()
         flash('entry updated', 'success')
     return redirect(url_for('new_entry'))
