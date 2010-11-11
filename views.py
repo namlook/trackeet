@@ -10,11 +10,13 @@ from models import *
 from mongokit import Connection
 from datetime import datetime
 
+from flask import Flask
+
 # create our application
 app = Flask(__name__)
 app.config['DATABASE'] = 'trackeet'
 app.config['SECRET_KEY'] = 'secret'
-app.debug = True
+
 
 # register models
 con = Connection()
@@ -63,7 +65,4 @@ def create_entry():
     flash('entry created', 'success') 
     return redirect(url_for('new_entry'))
     
-
-if __name__ == '__main__':
-    app.run()
 
