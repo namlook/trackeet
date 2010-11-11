@@ -36,7 +36,7 @@ class Entry(Root):
         'project': unicode,
         'duration': int, #minutes
         'created_at': datetime,
-        'comment': unicode,
+        'comments': [unicode],
         'tags': [unicode],
     }
     required_fields = ['project', 'duration', 'created_at']

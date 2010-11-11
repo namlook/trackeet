@@ -26,7 +26,7 @@ class MyTest(TestCase):
             data = {
                 'duration':'10',
                 'project': 'trackeet',
-                'tag': 'documentation'
+                'stub': 'documentation, this is cool'
               }
         data.update(kwargs)
         return self.client.post('/entry/create',
@@ -41,7 +41,6 @@ class MyTest(TestCase):
           follow_redirects = True
         )
 
-
     #
     # Test cases
     #
@@ -55,7 +54,9 @@ class MyTest(TestCase):
         response = self.create_entry(fill=True)
         assert self.db.Project.find_one('trackeet')
         assert self.db.Tag.find_one('documentation')
-        assert self.db.Entry.find_one({'project': 'trackeet', 'tags': 'documentation'})
+        entry =  self.db.Entry.find_one({'project': 'trackeet', 'tags': 'documentation'})
+        assert entry['tags'] == ['documentation']
+        assert entry['comments'] == ['this is cool']
         self.assert200(response)
         assert 'entry created' in response.data
 
@@ -84,13 +85,13 @@ class MyTest(TestCase):
         assert self.db.Tag.find_one('test') is None
         self.create_entry(fill=True)
         entry = self.db.Entry.find_one()
-        response = self.update_entry(entry, tags="test")
+        response = self.update_entry(entry, stub="test, this is a test")
         assert self.db.Tag.find_one('test')
 
     def test_list_all_entries(self):
-        self.assert200(self.create_entry(project='trackeet_project', duration=10, tag='documentation'))
+        self.assert200(self.create_entry(project='trackeet_project', duration=10, stub='documentation'))
         self.assert200(self.create_entry(project='abcde_project', duration=50))
-        self.assert200(self.create_entry(project='trackeet_project', duration=20, tag='tests'))
+        self.assert200(self.create_entry(project='trackeet_project', duration=20, stub='tests'))
         response = self.client.get('/entry/list')
         self.assert200(response)
         assert 'trackeet_project' in response.data
