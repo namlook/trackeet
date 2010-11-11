@@ -22,11 +22,8 @@ app.register_module(entry)
 def forge_stub(entry):
     return ", ".join(i for i in entry['tags']+entry['comments'] if i is not None)
 
-def get_db():
-    return con[app.config['DATABASE']]
-
 @app.before_request
 def before_request():
-    g.db = get_db()
+    g.db = con[app.config['DATABASE']]
 
 
