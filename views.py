@@ -82,11 +82,17 @@ def update_entry(id):
         if request.form.get('duration'):
             entry['duration'] = int(request.form['duration'])
         if request.form.get('tags'):
-            entry['tags'] = request.form['tags']
+            if not g.db.Tag.find_one(request.form.get('tags')):
+                tag = g.db.Tag()
+                tag['_id'] = request.form.get('tags')
+                tag.save()
+            entry['tags'] = [tag['_id']]
         if request.form.get('project'):
             if not g.db.Project.find_one(request.form['project']):
-                abort(404)
-            entry['project'] = request.form['project']
+                project = g.db.Project()
+                project['_id'] = request.form['project']
+                project.save()
+            entry['project'] = project['_id']
         entry.save()
         flash('entry updated', 'success')
     return redirect(url_for('new_entry'))

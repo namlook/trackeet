@@ -65,9 +65,17 @@ class MyTest(TestCase):
         self.assertEqual(new_entry['duration'], 15)
         self.assertNotEqual(new_entry['duration'], entry['duration'])
 
-    def test_update_entry_project_not_found(self):
+    def test_update_entry_new_project(self):
+        assert self.db.Project.find_one('test') is None
         self.create_entry()
         entry = self.db.Entry.find_one()
         response = self.update_entry(entry, project="test")
-        self.assert404(response)
+        assert self.db.Project.find_one('test')
+
+    def test_update_entry_new_tags(self):
+        assert self.db.Tag.find_one('test') is None
+        self.create_entry()
+        entry = self.db.Entry.find_one()
+        response = self.update_entry(entry, tags="test")
+        assert self.db.Tag.find_one('test')
 
