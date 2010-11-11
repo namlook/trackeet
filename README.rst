@@ -14,3 +14,10 @@ Install Flask : `easy_install flask`
 
 Install MongoKit : `easy_install mongokit`
 
+
+Testing
+-------
+
+Install nose : `easy_install nose`
+Install Flask testing extension : `easy_install flask-testing`
+nosetests
