@@ -8,8 +8,8 @@ class MyTest(TestCase):
     def create_app(self):
         return app
 
-    def test_hello_world(self):
-        resp = self.client.get('/')
+    def test_new_entry(self):
+        resp = self.client.get('/entry/new')
         self.assert200(resp)
-        assert 'Hello World!' in resp.data
+        assert 'Create new entry' in resp.data
 
