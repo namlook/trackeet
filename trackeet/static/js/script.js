@@ -32,10 +32,19 @@ function EntryFormValidator() {
         value = input.val();
         duration = parseInt(value);
         lastChar = value.charAt(value.length - 1);
+        indexOfColon = value.indexOf(':');
 
         if(isNaN(duration))
         {
             return
+        }
+
+        if(indexOfColon > 0)
+        {
+            hh = parseInt(value.substr(0, indexOfColon));
+            mm = parseInt(value.substr(indexOfColon + 1, value.length - indexOfColon));
+
+            duration = hh * 60 + mm;
         }
 
         // Strings ends with 'h', we're talking about hours
