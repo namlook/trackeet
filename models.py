@@ -1,15 +1,10 @@
 
-from mongokit import Connection, Document
+from mongokit import Document
 from datetime import datetime
 
-con = Connection()
-
-DATABASE = 'trackeet'
-
 class Root(Document):
-    __database__ = DATABASE
+    pass
 
-@con.register
 class Project(Root):
     """
     A time tracked project.
@@ -19,7 +14,6 @@ class Project(Root):
         '_id': unicode # name
     }
 
-@con.register
 class Task(Root):
     """
     A Task is something we're working on and we'd like to track the time we
@@ -33,7 +27,6 @@ class Task(Root):
         'name': unicode,
     }
 
-@con.register
 class Entry(Root):
     """
     An Entry is a piece of time spent on a Task.
@@ -41,6 +34,6 @@ class Entry(Root):
     structure = {
         'task': unicode,
         'duration': int, #minutes
-        'created_at': datetime
+        'created_at': datetime,
         'comment': unicode,
     }
