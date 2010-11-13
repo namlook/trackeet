@@ -19,7 +19,6 @@ class Tag(Root):
     """
     A Tag is something we're working on and we'd like to track the time we
     spent on it.
-
     """
     __collection__ = 'tags'
     structure = {
@@ -40,4 +39,3 @@ class Entry(Root):
         'tags': [unicode],
     }
     required_fields = ['project', 'duration', 'created_at']
-
