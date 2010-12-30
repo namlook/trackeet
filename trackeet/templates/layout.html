@@ -34,7 +34,6 @@
 
   <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
   <script src="/static/js/libs/modernizr-1.6.min.js"></script>
-
 </head>
 
 <body>
@@ -53,7 +52,7 @@
     </header>
 
     <div id="main" class="document">
-      <h1><a href="{{url_for('new_entry')}}">Trackeet</a></h1>
+      <h1><a href="{{url_for('entry.list_entries')}}">Trackeet</a></h1>
       {% block body %}{% endblock %}
     </div>
 
@@ -69,12 +68,10 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="/static/js/libs/jquery-1.4.2.js"%3E%3C/script%3E'))</script>
   <script type="text/javascript" src="/static/js/libs/jquery-ui-1.8.6.custom.min.js"></script>
-
   <!-- scripts concatenated and minified via ant build script-->
   <script src="/static/js/plugins.js"></script>
   <script src="/static/js/script.js?v=1"></script>
   <!-- end concatenated and minified scripts-->
-
 
   <!--[if lt IE 7 ]>
     <script src="/static/js/libs/dd_belatedpng.js"></script>

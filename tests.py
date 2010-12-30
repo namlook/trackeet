@@ -45,11 +45,6 @@ class MyTest(TestCase):
     # Test cases
     #
 
-    def test_new_entry(self):
-        response = self.client.get('/entry/new')
-        self.assert200(response)
-        assert 'Create new entry' in response.data
-
     def test_create_entry(self):
         response = self.create_entry(fill=True)
         assert self.db.Project.find_one('trackeet')
@@ -110,7 +105,7 @@ class MyTest(TestCase):
         assert 'tests' in response.data, response.data
         assert 'abcde_project' in response.data, response.data
 
-        response = self.client.get('/entry/list/trackeet_project')
+        response = self.client.get('/entry/list?project=trackeet_project')
         self.assert200(response)
         assert 'trackeet_project' in response.data
         assert 'documentation' in response.data
