@@ -14,7 +14,7 @@ entry = Module(__name__)
 @entry.route('/entry/create', methods=['post'])
 def create_entry():
     """
-    save a entry in the database. If the task does not exists, it will create a
+    save an entry in the database. If the task does not exists, it will create a
     new one on the fly.
     """
     project_id =  request.form.get('project')
@@ -42,9 +42,9 @@ def create_entry():
     entry['comments'] = stub['comments']
     entry['created_at'] = datetime.utcnow()
     entry.save()
-    flash('entry created', 'success') 
+    flash('entry created', 'success')
     return redirect(url_for('list_entries'))
-    
+
 @entry.route('/entry/edit/<id>')
 def edit_entry(id):
     entry = g.db.Entry.find_one(ObjectId(id))
